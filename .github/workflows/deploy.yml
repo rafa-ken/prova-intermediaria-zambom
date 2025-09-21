@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - PI-Zambom
+name: CI/CD Pipeline - Prova-Intermediaria-Zambom
 
 on:
   push:
@@ -36,8 +36,8 @@ jobs:
 
       - name: Build e Push da imagem
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/pi-zambom:latest .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/pi-zambom:latest
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/prova-intermediaria-zambom:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/prova-intermediaria-zambom:latest
 
       - name: Configurar SSH para EC2
         uses: webfactory/ssh-agent@v0.7.0
@@ -47,11 +47,11 @@ jobs:
       - name: Deploy na EC2
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/pi-zambom:latest
-          docker stop pi-zambom || true
-          docker rm pi-zambom || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/prova-intermediaria-zambom:latest
+          docker stop prova-intermediaria-zambom || true
+          docker rm prova-intermediaria-zambom || true
           docker run -d -p 8080:5000 \
             -e MONGO_URI=${{ secrets.MONGO_URI }} \
-            --name pi-zambom \
-            ${{ secrets.DOCKERHUB_USERNAME }}/pi-zambom:latest
+            --name prova-intermediaria-zambom \
+            ${{ secrets.DOCKERHUB_USERNAME }}/prova-intermediaria-zambom:latest
           EOF
